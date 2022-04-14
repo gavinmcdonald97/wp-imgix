@@ -53,22 +53,6 @@ class Plugin_Settings_Page extends Singleton
         ]);
     }
 
-    public function wp_imgix_domain_callback()
-    {
-        $value = get_option('wp_imgix_domain');
-        ?>
-            <input type="text" class="regular-text" name="wp_imgix_domain" value="<?php echo isset($value) ? esc_html($value) : ''; ?>" placeholder="demos.imgix.net"/>
-        <?php
-    }
-
-    public function wp_imgix_sign_key_callback()
-    {
-        $value = get_option('wp_imgix_sign_key');
-        ?>
-        <input type="text" class="regular-text" name="wp_imgix_sign_key" value="<?php echo isset($value) ? esc_html($value) : ''; ?>" placeholder="test1234"/>
-        <?php
-    }
-
     public function settingsPage()
     {
         ?>
