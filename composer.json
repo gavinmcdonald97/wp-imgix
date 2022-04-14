@@ -1,0 +1,14 @@
+{
+    "name": "gavinmcdonald/wp-imgix",
+    "description": "Serve your Wordpress images from Imgix",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "Gavin McDonald",
+            "email": "gmcdonald@lyles-sutherland.co.uk"
+        }
+    ],
+    "require": {
+        "imgix/imgix-php": "^3.3"
+    }
+}
