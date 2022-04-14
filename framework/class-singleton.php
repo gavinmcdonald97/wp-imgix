@@ -2,16 +2,22 @@
 
 namespace WPImgix;
 
-class Singleton
+abstract class Singleton
 {
-    private static $instance;
+    protected function __construct() {}
 
-    private function __construct() {}
-
-    public static function instance(): self
+    final public static function instance()
     {
-        if ( !isset($instance) )
-            self::$instance = new self;
-        return self::$instance;
+        static $instances = array();
+
+        $calledClass = get_called_class();
+
+        if ( !isset($instances[$calledClass]) ) {
+            $instances[$calledClass] = new $calledClass();
+        }
+
+        return $instances[$calledClass];
     }
+
+    final private function __clone() {}
 }
