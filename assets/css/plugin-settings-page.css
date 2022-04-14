@@ -1,0 +1,27 @@
+#wp-imgix-plugin-settings-page .section-wrapper {
+    margin: 30px 30px 30px 10px;
+    padding: 30px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+#wp-imgix-plugin-settings-page .svg-wrapper {
+    max-width: 100px;
+}
+
+#wp-imgix-plugin-settings-page .svg-wrapper svg {
+    width: 100%;
+}
+
+#wp-imgix-plugin-settings-page .title-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+#wp-imgix-plugin-settings-page .title-wrapper h2 {
+    font-size: 1.8rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-inline: 30px;
+}
