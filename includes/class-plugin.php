@@ -10,8 +10,16 @@ class Plugin extends Singleton
     protected function __construct()
     {
         $this->api = Imgix::instance();
+        add_action('admin_enqueue_scripts', array($this, 'admin_assets'));
         add_filter('wp_get_attachment_url', array($this, 'convertImageURL'));
         add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'));
+    }
+
+    public static function activate() {}
+
+    public function admin_assets(): void
+    {
+        wp_enqueue_style('wp-imgix-plugin-settings-page', WPIMGIX_PLUGIN_URL . 'assets/css/plugin-settings-page.css', array(), WPIMGIX_PLUGIN_VERSION);
     }
 
     public function convertImageURL($url): string

@@ -6,11 +6,20 @@ use Imgix\UrlBuilder;
 
 class Imgix extends Singleton
 {
-    protected $settings, $urlBuilder;
+    protected $settings = [
+        'imgix_domain' => '',
+        'use_signed_urls' => false,
+        'sign_key' => '',
+        'default_params' => [],
+        'default_srcset_options' => []
+    ];
+
+    protected $urlBuilder;
 
     protected function __construct($settings = [])
     {
-        $this->settings = $settings;
+        $this->settings = array_merge($this->settings, $settings);
+        if ( empty($this->settings['imgix_domain']) ) return;
         $this->urlBuilder = new UrlBuilder($this->settings['imgix_domain']);
         $this->urlBuilder->setIncludeLibraryParam(false);
 

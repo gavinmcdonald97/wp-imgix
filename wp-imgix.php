@@ -38,6 +38,8 @@ require_once ( WPIMGIX_PLUGIN_DIR . 'framework/class-singleton.php' );
  * Plugin includes
  */
 
+include_once ( WPIMGIX_PLUGIN_DIR . 'admin/class-setting.php' );
+include_once ( WPIMGIX_PLUGIN_DIR . 'admin/class-plugin-settings-page.php' );
 include_once ( WPIMGIX_PLUGIN_DIR . 'includes/class-imgix.php' );
 include_once ( WPIMGIX_PLUGIN_DIR . 'includes/class-plugin.php' );
 
@@ -48,4 +50,8 @@ include_once ( WPIMGIX_PLUGIN_DIR . 'includes/class-plugin.php' );
 if ( class_exists( __NAMESPACE__ . '\Plugin' ) ) {
     Plugin::instance();
     register_activation_hook( __FILE__, __NAMESPACE__ . '\Plugin::activate');
+}
+
+if ( class_exists( __NAMESPACE__ . '\Plugin_Settings_Page' ) ) {
+    Plugin_Settings_Page::instance();
 }
