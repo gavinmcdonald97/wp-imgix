@@ -39,7 +39,7 @@ class Plugin extends Singleton
 
     public function convertImageURL($image, $attachment_id, $size)
     {
-        if ( empty($image[0]) ) return $image;
+        if ( empty($image) || empty($image[0]) ) return $image;
         $source = $image[0];
         $width = $image[1];
         $height = $image[2];
