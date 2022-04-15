@@ -12,7 +12,8 @@ class Plugin extends Singleton
         $this->setupSettings();
         $this->api = Imgix::instance($this->settings);
         add_action('admin_enqueue_scripts', array($this, 'admin_assets'));
-        add_filter('wp_get_attachment_url', array($this, 'convertImageURL'));
+        //add_filter('wp_get_attachment_url', array($this, 'convertImageURL'));
+        add_filter('wp_get_attachment_image_src', array($this, 'convertImageURL'), 10, 3);
         //add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 3);
     }
 
@@ -36,12 +37,21 @@ class Plugin extends Singleton
         wp_enqueue_style('wp-imgix-plugin-settings-page', WPIMGIX_PLUGIN_URL . 'assets/css/plugin-settings-page.css', array(), WPIMGIX_PLUGIN_VERSION);
     }
 
-    public function convertImageURL($url): string
+    public function convertImageURL($image, $attachment_id, $size)
     {
-        if ( empty($url) ) return '';
-
-        return $this->api->getURL($url, []);
+        $source = $image[0];
+        $width = $image[1];
+        $height = $image[2];
+        $image[0] = $this->api->getURL($source, ['w' => $width, 'h' => $height]);
+        return $image;
     }
+
+//    public function convertImageURL($url): string
+//    {
+//        if ( empty($url) ) return '';
+//
+//        return $this->api->getURL($url, []);
+//    }
 
     public function convertImageSrcSet($sizes, $size_array, $source): array
     {
