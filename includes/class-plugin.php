@@ -9,10 +9,24 @@ class Plugin extends Singleton
 
     protected function __construct()
     {
-        $this->api = Imgix::instance();
+        $this->setupSettings();
+        $this->api = Imgix::instance($this->settings);
         add_action('admin_enqueue_scripts', array($this, 'admin_assets'));
         add_filter('wp_get_attachment_url', array($this, 'convertImageURL'));
-        add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'));
+        //add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 3);
+    }
+
+    protected function setupSettings()
+    {
+        $this->settings = [
+            'enable_imgix' => get_option('wp-imgix-enable-imgix'),
+            'imgix_domain' => get_option('wp-imgix-domain'),
+            'sign_key' => get_option('wp-imgix-sign-key'),
+            'use_signed_urls' => true,
+            'default_params' => [
+                'auto' => 'format'
+            ]
+        ];
     }
 
     public static function activate() {}
@@ -25,19 +39,33 @@ class Plugin extends Singleton
     public function convertImageURL($url): string
     {
         if ( empty($url) ) return '';
+
         return $this->api->getURL($url, []);
     }
 
-    public function convertImageSrcSet($sources): array
+    public function convertImageSrcSet($sizes, $size_array, $source): array
     {
-        if ( empty($sources) ) return [];
+        if ( empty($sizes) ) return [];
 
-        $url = $sources[0]['original_url'];
+        $sizes = array(
+            480 => array(
+                'url' => 'url_to_image_for_480px',
+                'descriptor' => 'w',
+                'value' => 480
+            ),
+            960 => array(
+                'url' => 'url_to_image_for_960px',
+                'descriptor' => 'w',
+                'value' => 960
+            )
+        );
 
-        $options = [
-            'widths' => array_column($sources, 'width')
-        ];
+        foreach ( $sizes as $width => $size ) {
+            $sizes[$width]['url'] = $this->api->getURL($source, ['w' => $width]);
+        }
 
+        var_dump($sizes);
+        return $sizes;
         return $this->api->getSrcSet($url, [], $options);
     }
 

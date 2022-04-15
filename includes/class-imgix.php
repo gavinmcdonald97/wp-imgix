@@ -31,6 +31,7 @@ class Imgix extends Singleton
     {
         if ( empty($url) ) return '';
         $params = array_merge($this->settings['default_params'], $params);
+        //return $url . "?w={$params['w']}&test=imgix";
         return $this->urlBuilder->createURL($url, $params);
     }
 
