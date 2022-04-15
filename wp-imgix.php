@@ -38,7 +38,6 @@ require_once ( WPIMGIX_PLUGIN_DIR . 'framework/class-singleton.php' );
  * Plugin includes
  */
 
-include_once ( WPIMGIX_PLUGIN_DIR . 'admin/class-setting.php' );
 include_once ( WPIMGIX_PLUGIN_DIR . 'admin/class-plugin-settings-page.php' );
 include_once ( WPIMGIX_PLUGIN_DIR . 'includes/class-imgix.php' );
 include_once ( WPIMGIX_PLUGIN_DIR . 'includes/class-plugin.php' );
