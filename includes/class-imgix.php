@@ -19,7 +19,7 @@ class Imgix extends Singleton
     protected function __construct($settings = [])
     {
         $this->settings = array_merge($this->settings, $settings);
-        if ( empty($this->settings['imgix_domain']) ) return;
+        if ( !$this->settings['enable_imgix'] || empty($this->settings['imgix_domain']) ) return;
         $this->urlBuilder = new UrlBuilder($this->settings['imgix_domain']);
         $this->urlBuilder->setIncludeLibraryParam(false);
 
