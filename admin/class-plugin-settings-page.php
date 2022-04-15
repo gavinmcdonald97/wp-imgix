@@ -112,7 +112,7 @@ class Plugin_Settings_Page extends Singleton {
                 break;
 
             default:
-                printf( '<input name="%1$s" id="%1$s" type="%2$s" placeholder="%3$s" value="%4$s" />',
+                printf( '<input class="regular-text" name="%1$s" id="%1$s" type="%2$s" placeholder="%3$s" value="%4$s" />',
                     $field['id'],
                     $field['type'],
                     $placeholder,
@@ -122,7 +122,7 @@ class Plugin_Settings_Page extends Singleton {
         }
 
         if ( isset($field['desc']) ) {
-            printf( '<p class="description">%s </p>', $field['desc'] );
+            printf( '<p class="description regular-text"><small>%s</small></p>', $field['desc'] );
         }
     }
 
