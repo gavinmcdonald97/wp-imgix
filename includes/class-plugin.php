@@ -10,9 +10,9 @@ class Plugin extends Singleton
     protected function __construct()
     {
         $this->setupSettings();
+        if ( !$this->settings['enable_imgix'] || empty($this->settings['imgix_domain']) ) return;
         $this->api = Imgix::instance($this->settings);
         add_action('admin_enqueue_scripts', array($this, 'admin_assets'));
-        //add_filter('wp_get_attachment_url', array($this, 'convertImageURL'));
         add_filter('wp_get_attachment_image_src', array($this, 'convertImageURL'), 10, 3);
         add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 5);
     }
@@ -24,10 +24,31 @@ class Plugin extends Singleton
             'imgix_domain' => get_option('wp-imgix-domain'),
             'sign_key' => get_option('wp-imgix-sign-key'),
             'use_signed_urls' => true,
+            'image_sizes' => [],
             'default_params' => [
                 'auto' => 'format,compress,enhance'
             ]
         ];
+
+        $registered_sizes = wp_get_registered_image_subsizes();
+
+        $this->settings['image_sizes'][$registered_sizes['medium']['width']] = array(
+            'descriptor' => 'w',
+            'value' => $registered_sizes['medium']['width'],
+            'height' => $registered_sizes['medium']['height']
+        );
+
+        $this->settings['image_sizes'][$registered_sizes['medium_large']['width']] = array(
+            'descriptor' => 'w',
+            'value' => $registered_sizes['medium_large']['width'],
+            'height' => $registered_sizes['medium_large']['height']
+        );
+
+        $this->settings['image_sizes'][$registered_sizes['large']['width']] = array(
+            'descriptor' => 'w',
+            'value' => $registered_sizes['large']['width'],
+            'height' => $registered_sizes['large']['height']
+        );
     }
 
     public static function activate() {}
@@ -47,13 +68,6 @@ class Plugin extends Singleton
         return $image;
     }
 
-//    public function convertImageURL($url): string
-//    {
-//        if ( empty($url) ) return '';
-//
-//        return $this->api->getURL($url, []);
-//    }
-
     public function convertImageSrcSet($sizes, $size_array, $source, $image_meta, $attachment_id): array
     {
         if ( empty($sizes) ) return [];
@@ -66,27 +80,7 @@ class Plugin extends Singleton
             $image_source_url = explode('?', $image_source_url)[0];
         }
 
-        $registered_sizes = wp_get_registered_image_subsizes();
-
-        $sizes = [];
-
-        $sizes[$registered_sizes['medium']['width']] = array(
-            'descriptor' => 'w',
-            'value' => $registered_sizes['medium']['width'],
-            'height' => $registered_sizes['medium']['height']
-        );
-
-        $sizes[$registered_sizes['medium_large']['width']] = array(
-            'descriptor' => 'w',
-            'value' => $registered_sizes['medium_large']['width'],
-            'height' => $registered_sizes['medium_large']['height']
-        );
-
-        $sizes[$registered_sizes['large']['width']] = array(
-            'descriptor' => 'w',
-            'value' => $registered_sizes['large']['width'],
-            'height' => $registered_sizes['large']['height']
-        );
+        $sizes = $this->settings['image_sizes'];
 
         foreach ( $sizes as $width => $size ) {
             $params = [];
