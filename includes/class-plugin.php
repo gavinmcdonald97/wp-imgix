@@ -14,7 +14,7 @@ class Plugin extends Singleton
         $this->api = Imgix::instance($this->settings);
         add_action('admin_enqueue_scripts', array($this, 'admin_assets'));
         add_filter('wp_get_attachment_image_src', array($this, 'convertImageURL'), 10, 3);
-        add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 5);
+        //add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 5);
     }
 
     protected function setupSettings()
@@ -61,7 +61,10 @@ class Plugin extends Singleton
     public function convertImageURL($image, $attachment_id, $size)
     {
         if ( empty($image) || empty($image[0]) ) return $image;
-        $source = wp_get_attachment_image_url($attachment_id, 'full');
+        // Check if imgix already applied to URL
+        if ( strpos($image[0], $this->settings['imgix_domain']) !== false ) return $image;
+        // Always pass full size image to imgix
+        $source = $image[0];
         $width = $image[1];
         $height = $image[2];
         $image[0] = $this->api->getURL($source, ['w' => $width, 'h' => $height]);
