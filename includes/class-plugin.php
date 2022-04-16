@@ -61,7 +61,7 @@ class Plugin extends Singleton
     public function convertImageURL($image, $attachment_id, $size)
     {
         if ( empty($image) || empty($image[0]) ) return $image;
-        $source = $image[0];
+        $source = wp_get_attachment_image_url($attachment_id, 'full');
         $width = $image[1];
         $height = $image[2];
         $image[0] = $this->api->getURL($source, ['w' => $width, 'h' => $height]);
