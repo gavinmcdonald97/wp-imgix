@@ -14,7 +14,7 @@ class Plugin extends Singleton
         add_action('admin_enqueue_scripts', array($this, 'admin_assets'));
         //add_filter('wp_get_attachment_url', array($this, 'convertImageURL'));
         add_filter('wp_get_attachment_image_src', array($this, 'convertImageURL'), 10, 3);
-        //add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 3);
+        add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 3);
     }
 
     protected function setupSettings()
@@ -58,26 +58,30 @@ class Plugin extends Singleton
     {
         if ( empty($sizes) ) return [];
 
-        $sizes = array(
-            480 => array(
-                'url' => 'url_to_image_for_480px',
-                'descriptor' => 'w',
-                'value' => 480
-            ),
-            960 => array(
-                'url' => 'url_to_image_for_960px',
-                'descriptor' => 'w',
-                'value' => 960
-            )
+        $registered_sizes = wp_get_registered_image_subsizes();
+
+        $sizes = [];
+
+        $sizes[$registered_sizes['medium']['width']] = array(
+            'descriptor' => 'w',
+            'value' => $registered_sizes['medium']['width']
+        );
+
+        $sizes[$registered_sizes['medium_large']['width']] = array(
+            'descriptor' => 'w',
+            'value' => $registered_sizes['medium_large']['width']
+        );
+
+        $sizes[$registered_sizes['large']['width']] = array(
+            'descriptor' => 'w',
+            'value' => $registered_sizes['large']['width']
         );
 
         foreach ( $sizes as $width => $size ) {
             $sizes[$width]['url'] = $this->api->getURL($source, ['w' => $width]);
         }
 
-        var_dump($sizes);
         return $sizes;
-        return $this->api->getSrcSet($url, [], $options);
     }
 
 
