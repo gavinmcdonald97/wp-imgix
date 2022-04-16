@@ -61,14 +61,10 @@ class Plugin extends Singleton
         $image_source_url = wp_get_attachment_image_url($attachment_id, 'full');
 
         // Remove Imgix domain and params from source URL
-//        if ( strpos($source, trailingslashit($this->settings['imgix_domain'])) !== false ) {
-//            $source = explode(trailingslashit($this->settings['imgix_domain']), urldecode($source))[1];
-//            $source = explode('?', $source)[0];
-//        }
-//
-//        // Ensure source URL is full-size
-//        $size_string =
-//        str_replace();
+        if ( strpos($image_source_url, trailingslashit($this->settings['imgix_domain'])) !== false ) {
+            $image_source_url = explode(trailingslashit($this->settings['imgix_domain']), urldecode($image_source_url))[1];
+            $image_source_url = explode('?', $image_source_url)[0];
+        }
 
         $registered_sizes = wp_get_registered_image_subsizes();
 
