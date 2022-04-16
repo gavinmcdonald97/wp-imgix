@@ -25,7 +25,7 @@ class Plugin extends Singleton
             'sign_key' => get_option('wp-imgix-sign-key'),
             'use_signed_urls' => true,
             'default_params' => [
-                'auto' => 'format'
+                'auto' => 'format,compress,enhance'
             ]
         ];
     }
@@ -58,27 +58,41 @@ class Plugin extends Singleton
     {
         if ( empty($sizes) ) return [];
 
+        // Remove Imgix domain and params from source URL
+        if ( strpos($source, trailingslashit($this->settings['imgix_domain'])) !== false ) {
+            $source = explode(trailingslashit($this->settings['imgix_domain']), urldecode($source))[1];
+            $source = explode('?', $source)[0];
+        }
+
         $registered_sizes = wp_get_registered_image_subsizes();
 
         $sizes = [];
 
         $sizes[$registered_sizes['medium']['width']] = array(
             'descriptor' => 'w',
-            'value' => $registered_sizes['medium']['width']
+            'value' => $registered_sizes['medium']['width'],
+            'height' => $registered_sizes['medium']['height']
         );
 
         $sizes[$registered_sizes['medium_large']['width']] = array(
             'descriptor' => 'w',
-            'value' => $registered_sizes['medium_large']['width']
+            'value' => $registered_sizes['medium_large']['width'],
+            'height' => $registered_sizes['medium_large']['height']
         );
 
         $sizes[$registered_sizes['large']['width']] = array(
             'descriptor' => 'w',
-            'value' => $registered_sizes['large']['width']
+            'value' => $registered_sizes['large']['width'],
+            'height' => $registered_sizes['large']['height']
         );
 
         foreach ( $sizes as $width => $size ) {
-            $sizes[$width]['url'] = $this->api->getURL($source, ['w' => $width]);
+            $params = [];
+            if ( $width > 0 )
+                $params['w'] = $width;
+            if ( $size['height'] > 0 )
+                $params['h'] = $size['height'];
+            $sizes[$width]['url'] = $this->api->getURL($source, $params);
         }
 
         return $sizes;
