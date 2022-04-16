@@ -14,7 +14,7 @@ class Plugin extends Singleton
         add_action('admin_enqueue_scripts', array($this, 'admin_assets'));
         //add_filter('wp_get_attachment_url', array($this, 'convertImageURL'));
         add_filter('wp_get_attachment_image_src', array($this, 'convertImageURL'), 10, 3);
-        add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 3);
+        add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 5);
     }
 
     protected function setupSettings()
@@ -54,15 +54,21 @@ class Plugin extends Singleton
 //        return $this->api->getURL($url, []);
 //    }
 
-    public function convertImageSrcSet($sizes, $size_array, $source): array
+    public function convertImageSrcSet($sizes, $size_array, $source, $image_meta, $attachment_id): array
     {
         if ( empty($sizes) ) return [];
 
+        $image_source_url = wp_get_attachment_image_url($attachment_id, 'full');
+
         // Remove Imgix domain and params from source URL
-        if ( strpos($source, trailingslashit($this->settings['imgix_domain'])) !== false ) {
-            $source = explode(trailingslashit($this->settings['imgix_domain']), urldecode($source))[1];
-            $source = explode('?', $source)[0];
-        }
+//        if ( strpos($source, trailingslashit($this->settings['imgix_domain'])) !== false ) {
+//            $source = explode(trailingslashit($this->settings['imgix_domain']), urldecode($source))[1];
+//            $source = explode('?', $source)[0];
+//        }
+//
+//        // Ensure source URL is full-size
+//        $size_string =
+//        str_replace();
 
         $registered_sizes = wp_get_registered_image_subsizes();
 
@@ -92,7 +98,7 @@ class Plugin extends Singleton
                 $params['w'] = $width;
             if ( $size['height'] > 0 )
                 $params['h'] = $size['height'];
-            $sizes[$width]['url'] = $this->api->getURL($source, $params);
+            $sizes[$width]['url'] = $this->api->getURL($image_source_url, $params);
         }
 
         return $sizes;
