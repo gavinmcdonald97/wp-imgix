@@ -64,7 +64,7 @@ class Plugin extends Singleton
         // Check if imgix already applied to URL
         if ( strpos($image[0], $this->settings['imgix_domain']) !== false ) return $image;
         // Always pass full size image to imgix
-        $source = $image[0];
+        $source = $this->stripSizeFromImageURL($image[0]);
         $width = $image[1];
         $height = $image[2];
         $image[0] = $this->api->getURL($source, ['w' => $width, 'h' => $height]);
@@ -97,5 +97,9 @@ class Plugin extends Singleton
         return $sizes;
     }
 
+    public function stripSizeFromImageURL(string $url = ''): string
+    {
+        return preg_replace('-\d+[Xx]\d+\.', '', $url);
+    }
 
 }
