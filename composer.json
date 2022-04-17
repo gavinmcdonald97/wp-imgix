@@ -10,5 +10,15 @@
     ],
     "require": {
         "imgix/imgix-php": "^3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "WPImgix\\Framework\\": "framework/",
+            "WPImgix\\Admin\\": "admin/",
+            "WPImgix\\": "includes/"
+        }
     }
 }

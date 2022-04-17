@@ -1,3 +1,6 @@
+### Coding standards
+> Follow PSR coding standards or pull-requests will be denied
+
 ### Dev outstanding
 - Only load admin css on relevant pages
 - Add "enable imgix" setting

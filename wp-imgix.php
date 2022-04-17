@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Imgix
  * Description: Serve your images from Imgix CDN for faster page load times.
- * Version: 0.2.0
+ * Version: 0.3.0
  * Author: Gavin McDonald
  */
 
@@ -20,7 +20,7 @@ defined('ABSPATH') || die;
 
 define( 'WPIMGIX_PLUGIN_DIR', plugin_dir_path(__FILE__) );
 define( 'WPIMGIX_PLUGIN_URL', plugin_dir_url(__FILE__) );
-define( 'WPIMGIX_PLUGIN_VERSION', '0.2.0' );
+define( 'WPIMGIX_PLUGIN_VERSION', '0.3.0' );
 
 /**
  * Composer setup
@@ -29,28 +29,9 @@ define( 'WPIMGIX_PLUGIN_VERSION', '0.2.0' );
 require_once ( WPIMGIX_PLUGIN_DIR . 'vendor/autoload.php' );
 
 /**
- * Include framework code
- */
-
-require_once ( WPIMGIX_PLUGIN_DIR . 'framework/class-singleton.php' );
-
-/**
- * Plugin includes
- */
-
-include_once ( WPIMGIX_PLUGIN_DIR . 'admin/class-plugin-settings-page.php' );
-include_once ( WPIMGIX_PLUGIN_DIR . 'includes/class-imgix.php' );
-include_once ( WPIMGIX_PLUGIN_DIR . 'includes/class-plugin.php' );
-
-/**
  * Bootstrap the plugin
  */
 
-if ( class_exists( __NAMESPACE__ . '\Plugin' ) ) {
-    Plugin::instance();
-    register_activation_hook( __FILE__, __NAMESPACE__ . '\Plugin::activate');
-}
-
-if ( class_exists( __NAMESPACE__ . '\Plugin_Settings_Page' ) ) {
-    Plugin_Settings_Page::instance();
-}
+Plugin::instance();
+Admin\PluginSettingsPage::instance();
+register_activation_hook( __FILE__, __NAMESPACE__ . '\Plugin::activate');
