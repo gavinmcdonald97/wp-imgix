@@ -18,7 +18,8 @@ class Plugin extends Singleton
         $this->api = Imgix::instance($this->settings);
         add_action('admin_enqueue_scripts', array($this, 'admin_assets'));
         add_filter('wp_get_attachment_image_src', array($this, 'convertImageURL'), 10, 3);
-        //add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 5);
+        add_filter('wp_calculate_image_srcset', array($this, 'convertImageSrcSet'), 10, 5);
+        add_filter('wp_get_attachment_image_attributes', array($this, 'setImageSizesAttribute'));
     }
 
     protected function setupSettings()
@@ -125,6 +126,12 @@ class Plugin extends Singleton
         }
 
         return $sizes;
+    }
+
+    public function setImageSizesAttribute($attributes): array
+    {
+        $attributes['sizes'] = '100w';
+        return $attributes;
     }
 
     public function stripSizeFromImageURL(string $url = ''): string

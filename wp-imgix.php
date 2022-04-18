@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP Imgix
  * Description: Serve your images from Imgix CDN for faster page load times.
- * Version: 0.3.0
+ * Version: 0.3.1
  * Author: Gavin McDonald
  */
 
@@ -20,7 +20,7 @@ defined('ABSPATH') || die;
 
 define( 'WPIMGIX_PLUGIN_DIR', plugin_dir_path(__FILE__) );
 define( 'WPIMGIX_PLUGIN_URL', plugin_dir_url(__FILE__) );
-define( 'WPIMGIX_PLUGIN_VERSION', '0.3.0' );
+define( 'WPIMGIX_PLUGIN_VERSION', '0.3.1' );
 
 /**
  * Composer setup
